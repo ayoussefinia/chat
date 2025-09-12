@@ -1,3 +1,4 @@
+from asyncio.log import logger
 import os
 from typing import List
 from fastapi import FastAPI
@@ -11,9 +12,9 @@ from sqlalchemy import text
 
 # --- DB setup ---
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql+asyncpg://todo_huws_user:DJRA3oJSU35FeVeA7io6UlvezqjjZb5R@dpg-d2rrovp5pdvs73eckql0-a/todo_huws" 
+    "DATABASE_URL_ASYNC", "postgresql+asyncpg://todo_huws_user:DJRA3oJSU35FeVeA7io6UlvezqjjZb5R@dpg-d2rrovp5pdvs73eckql0-a/todo_huws" 
 )
-
+logger.info(f"Using DATABASE_URL_ASYNC = {DATABASE_URL}")
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
 Base = declarative_base()
