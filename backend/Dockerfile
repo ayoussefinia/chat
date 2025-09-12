@@ -1,17 +1,15 @@
-FROM python:3.13-slim
+FROM python:3.13-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Install system dependencies (if needed, e.g., psycopg2)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential libpq-dev curl \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies (alpine)
+RUN apk add --no-cache build-base postgresql-dev curl
 
 # Copy dependency files
 COPY pyproject.toml uv.lock ./
 
-# Install uv and dependencies (no bash process substitution)
+# Install uv and dependencies
 RUN pip install --upgrade pip \
     && pip install uv \
     && uv pip install --system --no-cache .
