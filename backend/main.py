@@ -11,7 +11,7 @@ from sqlalchemy import text
 
 # --- DB setup ---
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql+asyncpg://postgres:password@db:5432/chatbot_db" 
+    "DATABASE_URL", "postgresql+asyncpg://todo_huws_user:DJRA3oJSU35FeVeA7io6UlvezqjjZb5R@dpg-d2rrovp5pdvs73eckql0-a/todo_huwspostgres:password@db:5432/chatbot_db" 
 )
 
 engine = create_async_engine(DATABASE_URL, echo=True)
