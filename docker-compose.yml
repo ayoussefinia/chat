@@ -8,7 +8,8 @@ services:
     depends_on:
       - postgres-db
     environment:
-      - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/chatbot_db
+      # - DATABASE_URL=postgresql+asyncpg://postgres:password@db:5432/chatbot_db
+      - DATABASE_URL=postgresql+asyncpg://postgres:password@postgres-db:5432/chatbot_db
 
   next-frontend:
     build: ./frontend
@@ -18,6 +19,7 @@ services:
     ports:
       - "3000:3000"
     environment:
+      PORT: 3000
       NEXTAUTH_SECRET: supersecretjwtkey
       NEXTAUTH_URL: http://localhost:3000
       DATABASE_URL: postgresql://postgres:password@postgres-db:5432/chatbot_db

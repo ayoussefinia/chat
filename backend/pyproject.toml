@@ -9,10 +9,9 @@ dependencies = [
     "uvicorn[standard]>=0.35.0",
     "sqlalchemy[asyncio]>=2.0",
     "psycopg[async]>=3.1",    # async postgres driver
-    "asyncpg>=0.29",    
+    "asyncpg>=0.29",
     "alembic>=1.13",          # optional, for migrations
-    "bcrypt>=4.0.1"           # optional, for password hashing
+    "bcrypt>=4.0.1",          # optional, for password hashing
+    "httpx>=0.27.0"           # async HTTP client (HTTPS supported)
 ]
-
-
 
