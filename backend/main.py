@@ -11,10 +11,10 @@ import httpx
 from fastapi.middleware.cors import CORSMiddleware
 
 # --- Tunnel to my ollama server ---
-OLLAMA_BASE_URL = os.getenv("https://70db2959d01c.ngrok-free.app/")  # e.g. https://your-tunnel.example.com
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")  # e.g. https://your-tunnel.example.com
 # --- DB setup ---
 DATABASE_URL = os.getenv(
-    "DATABASE_URL_ASYNC", "postgresql+asyncpg://todo_huws_user:DJRA3oJSU35FeVeA7io6UlvezqjjZb5R@dpg-d2rrovp5pdvs73eckql0-a/todo_huws" 
+    "DATABASE_URL_ASYNC", "postgresql://ollama_user:tvJN7WT0O2v4zZWzFwGCwJCGpKrgEaHl@dpg-d5aml5juibrs73bvadag-a/ollama" 
 )
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 logger.info(f"Using DATABASE_URL_ASYNC = {DATABASE_URL}")
@@ -82,19 +82,28 @@ class ChatOut(BaseModel):
 
 @app.post("/chat", response_model=ChatOut)
 async def chat(body: ChatIn):
-    if not OLLAMA_BASE_URL:
+    ollama_base_url = os.getenv("OLLAMA_BASE_URL")
+    if not ollama_base_url:
         return ChatOut(response="OLLAMA_BASE_URL not set on server.")
 
-    payload = {
-        "model": os.getenv("OLLAMA_MODEL", "llama3.2"),
-        "prompt": body.prompt,
-        "stream": False
-    }
+    model = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
+    payload = {"model": model, "prompt": body.prompt, "stream": False}
 
     async with httpx.AsyncClient(timeout=60.0) as client:
-        r = await client.post(f"{OLLAMA_BASE_URL}/api/generate", json=payload)
-        r.raise_for_status()
+        r = await client.post(f"{ollama_base_url}/api/generate", json=payload)
+        # if it fails, return text so we can see why
+        if r.status_code >= 400:
+            return ChatOut(response=f"Upstream error {r.status_code}: {r.text[:500]}")
         data = r.json()
 
     return ChatOut(response=data.get("response", ""))
 
+
+
+@app.get("/debug/env")
+async def debug_env():
+    return {
+        "OLLAMA_BASE_URL": os.getenv("OLLAMA_BASE_URL"),
+        "OLLAMA_MODEL": os.getenv("OLLAMA_MODEL"),
+        "DATABASE_URL_ASYNC_set": bool(os.getenv("DATABASE_URL_ASYNC")),
+    }
