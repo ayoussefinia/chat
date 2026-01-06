@@ -87,7 +87,7 @@ async def chat(body: ChatIn):
     if not ollama_base_url:
         return ChatOut(response="OLLAMA_BASE_URL not set on server.")
 
-    model = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
+    model = os.getenv("OLLAMA_MODEL", "llama3.2:3b")
     payload = {"model": model, "prompt": body.prompt, "stream": False}
 
     async with httpx.AsyncClient(timeout=60.0) as client:
