@@ -13,9 +13,10 @@ from fastapi.middleware.cors import CORSMiddleware
 # --- Tunnel to my ollama server ---
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")  # e.g. https://your-tunnel.example.com
 # --- DB setup ---
-DATABASE_URL = os.getenv(
-    "DATABASE_URL_ASYNC", "postgresql://ollama_user:tvJN7WT0O2v4zZWzFwGCwJCGpKrgEaHl@dpg-d5aml5juibrs73bvadag-a/ollama" 
+DATABASE_URL = os.environ["DATABASE_URL"].replace(
+    "postgresql://", "postgresql+asyncpg://"
 )
+
 OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
 logger.info(f"Using DATABASE_URL_ASYNC = {DATABASE_URL}")
 engine = create_async_engine(DATABASE_URL, echo=True)
