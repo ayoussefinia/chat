@@ -18,7 +18,10 @@ export default function Home() {
     setAnswer("");
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/chat`, {
+      const base = process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, "");
+      if (!base) throw new Error("NEXT_PUBLIC_API_BASE_URL is undefined in the client build.");
+      console.log("Using API base URL:", base);
+      const res = await fetch(`${base}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt }),
