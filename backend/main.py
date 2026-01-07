@@ -10,6 +10,11 @@ from sqlalchemy import text
 import httpx
 from fastapi.middleware.cors import CORSMiddleware
 
+origins = [
+    "https://chat-frontend-i7uy.onrender.com",
+    "http://localhost:3000",
+]
+
 # --- Tunnel to my ollama server ---
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL")  # e.g. https://your-tunnel.example.com
 # --- DB setup ---
@@ -68,12 +73,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://YOUR-FRONTEND.onrender.com",
+        "https://chat-frontend-i7uy.onrender.com",
     ],
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 class ChatIn(BaseModel):
     prompt: str
